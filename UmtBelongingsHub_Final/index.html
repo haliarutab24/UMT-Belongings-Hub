@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umt Belongings Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            border: none;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--accent-color);
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+        }
+        /* Custom Alert Modal Styling */
+.custom-alert-modal .modal-content {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-alert-modal .modal-header {
+    background-color: var(--primary-color);
+    color: var(--light-color);
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+}
+
+.custom-alert-modal .modal-body {
+    background-color: var(--light-color);
+    padding: 2rem;
+    text-align: center;
+}
+
+.custom-alert-modal .modal-body i {
+    color: var(--accent-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.custom-alert-modal .modal-body p {
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.custom-alert-modal .btn-primary {
+    background-color: var(--secondary-color);
+    border: none;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+.custom-alert-modal .btn-primary:hover {
+    background-color: #2980b9;
+}
+    </style>
+</head>
+<body>
+       <!-- Navigation Bar -->]
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-search-location me-2"></i>UniLost & Found
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="lost.html">Lost Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="found.html">Found Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                </ul>
+                
+                <!-- Logged Out State (Visible when not logged in) -->
+                <div class="logged-out auth-buttons">
+                    <button class="btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#loginTypeModal">
+                        <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                    </button>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signupModal">
+                        <i class="fas fa-user-plus me-1"></i>Sign Up
+                    </button>
+                </div>
+                
+                <!-- Logged In State (Visible when logged in) -->
+                <div class="logged-in">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="notificationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-bell"></i>
+                                <span class="badge rounded-pill bg-danger notification-badge">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                                <li><h6 class="dropdown-header">Notifications</h6></li>
+                                <li><a class="dropdown-item" href="#">Someone found your lost wallet</a></li>
+                                <li><a class="dropdown-item" href="#">Your claim request was approved</a></li>
+                                <li><a class="dropdown-item" href="#">New lost items matching your found items</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#">View all notifications</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>John Doe
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><a class="dropdown-item" href="dashboard.html"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                                <li><a class="dropdown-item" href="my-posts.html"><i class="fas fa-list me-2"></i>My Posts</a></li>
+                                <li><a class="dropdown-item" href="my-requests.html"><i class="fas fa-handshake me-2"></i>My Requests</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+<!-- Custom Alert Model -->
+    <div class="modal fade custom-alert-modal" id="customAlertModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Action Required</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Please sign in to report a found item.</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginTypeModal" data-bs-dismiss="modal">
+                    <i class="fas fa-sign-in-alt me-1"></i>Sign In
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Login Type Modal (User/Admin) -->
+    <div class="modal fade" id="loginTypeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign In As</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-primary w-100 py-3" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">
+                                <i class="fas fa-user-graduate fa-2x mb-2"></i><br>
+                                <h4>Student</h4>
+                                <p class="mb-0">Sign in with university credentials</p>
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-secondary w-100 py-3" data-bs-toggle="modal" data-bs-target="#adminLoginModal" data-bs-dismiss="modal">
+                                <i class="fas fa-user-shield fa-2x mb-2"></i><br>
+                                <h4>Administrator</h4>
+                                <p class="mb-0">Sign in with admin credentials</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p>Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal fade" id="adminLoginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admin Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="adminLoginForm">
+                        <div class="mb-3">
+                            <label for="adminEmail" class="form-label">Admin Email</label>
+                            <input type="email" class="form-control" id="adminEmail" placeholder="admin@university.edu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="adminPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="adminPassword">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="adminRememberMe">
+                            <label class="form-check-label" for="adminRememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login as Admin</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" data-bs-dismiss="modal">Forgot password?</a>
+                    </div>
+                    <hr>
+                    <p class="text-center">Not an admin? <a href="#" data-bs-toggle="modal" data-bs-target="#loginTypeModal" data-bs-dismiss="modal">Sign in as student</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 fw-bold mb-4">Lost Something on Campus?</h1>
+            <p class="lead mb-5">Connect with fellow students to recover your lost items or help return found belongings</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="report-lost.html" class="btn btn-light btn-lg px-4">
+                    <i class="fas fa-question-circle me-2"></i>Report Lost Item
+                </a>
+                <a href="report-found.html" class="btn btn-outline-light btn-lg px-4">
+                    <i class="fas fa-check-circle me-2"></i>Report Found Item
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Quick Search Section -->
+        <section class="mb-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4">Quick Search</h2>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="searchType" class="form-label">I'm looking for...</label>
+                                <select class="form-select" id="searchType">
+                                    <option selected>Choose...</option>
+                                    <option value="lost">Lost Items</option>
+                                    <option value="found">Found Items</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="itemCategory" class="form-label">Category</label>
+                                <select class="form-select" id="itemCategory">
+                                    <option selected>All Categories</option>
+                                    <option>Electronics</option>
+                                    <option>Books & Notes</option>
+                                    <option>Keys & ID Cards</option>
+                                    <option>Clothing</option>
+                                    <option>Bags & Wallets</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="location" class="form-label">Location</label>
+                                <select class="form-select" id="location">
+                                    <option selected>All Locations</option>
+                                    <option>Main Library</option>
+                                    <option>Science Building</option>
+                                    <option>Student Center</option>
+                                    <option>Sports Complex</option>
+                                    <option>Cafeteria</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="date">
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Search Items
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Items Section -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Recently Lost Items</h2>
+                <a href="lost-items.html" class="btn btn-outline-primary">View All</a>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Lost+Wallet" class="card-img-top" alt="Lost Wallet">
+                        <div class="card-body">
+                            <h5 class="card-title">Black Leather Wallet</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Student Center</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 15, 2023</p>
+                            <p class="card-text">Lost my wallet containing student ID and credit cards. Reward offered.</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Lost+Phone" class="card-img-top" alt="Lost Phone">
+                        <div class="card-body">
+                            <h5 class="card-title">iPhone 13 Pro</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Science Building</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 18, 2023</p>
+                            <p class="card-text">Silver iPhone with blue case. Lost during physics lab.</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Lost+Notebook" class="card-img-top" alt="Lost Notebook">
+                        <div class="card-body">
+                            <h5 class="card-title">Chemistry Notebook</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Main Library</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 20, 2023</p>
+                            <p class="card-text">Red notebook with all my organic chemistry notes. Please return!</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Recently Found Items</h2>
+                <a href="found-items.html" class="btn btn-outline-primary">View All</a>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Found+Keys" class="card-img-top" alt="Found Keys">
+                        <div class="card-body">
+                            <h5 class="card-title">Set of Keys</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Cafeteria</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 22, 2023</p>
+                            <p class="card-text">Found on table near the entrance. Includes car key and dorm key.</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Found+Headphones" class="card-img-top" alt="Found Headphones">
+                        <div class="card-body">
+                            <h5 class="card-title">Wireless Headphones</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Sports Complex</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 21, 2023</p>
+                            <p class="card-text">Black Sony headphones found in locker room.</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/300x200?text=Found+Water+Bottle" class="card-img-top" alt="Found Water Bottle">
+                        <div class="card-body">
+                            <h5 class="card-title">Hydro Flask</h5>
+                            <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Math Building</p>
+                            <p class="card-text"><i class="far fa-calendar-alt me-2"></i>May 19, 2023</p>
+                            <p class="card-text">Blue 32oz Hydro Flask with stickers on it.</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="item-detail.html" class="btn btn-sm btn-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="mb-5">
+            <h2 class="text-center mb-5">How It Works</h2>
+            <div class="row text-center">
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h4>1. Create Account</h4>
+                    <p>Sign up with your university email to verify your student status and start using the platform.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h4>2. Report Item</h4>
+                    <p>Submit details about your lost item or a found item with photos and location information.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4>3. Get Notified</h4>
+                    <p>Receive automatic notifications when a potential match is found for your lost item.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h4>4. Chat Securely</h4>
+                    <p>Communicate with the finder or owner through our secure messaging system.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h4>5. Arrange Return</h4>
+                    <p>Coordinate a safe return of the item with the other party.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h4>6. Confirm Resolution</h4>
+                    <p>Mark the item as returned to help us improve our matching system.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="mb-5">
+            <div class="card bg-light">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <h3 class="display-4 fw-bold">1,250+</h3>
+                            <p class="lead">Items Reunited</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="display-4 fw-bold">850+</h3>
+                            <p class="lead">Active Users</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h3 class="display-4 fw-bold">95%</h3>
+                            <p class="lead">Success Rate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>About UniLost & Found</h5>
+                    <p>A platform dedicated to helping university students recover their lost belongings and return found items to their rightful owners.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="lost-items.html" class="text-white">Lost Items</a></li>
+                        <li><a href="found-items.html" class="text-white">Found Items</a></li>
+                        <li><a href="about.html" class="text-white">About</a></li>
+                        <li><a href="contact.html" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>lostandfound@university.edu</li>
+                        <li><i class="fas fa-phone me-2"></i>(123) 456-7890</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>Student Services Building, Room 205</li>
+                    </ul>
+                    <div class="mt-3">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2023 University Lost & Found System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login to Your Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">University Email</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="name@university.edu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal" data-bs-dismiss="modal">Forgot password?</a>
+                    </div>
+                    <hr>
+                    <p class="text-center">Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" data-bs-dismiss="modal">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Your Account</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="signupFirstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="signupFirstName">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="signupLastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="signupLastName">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupEmail" class="form-label">University Email</label>
+                            <input type="email" class="form-control" id="signupEmail" placeholder="name@university.edu">
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signupPassword">
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="signupConfirmPassword">
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeTerms">
+                            <label class="form-check-label" for="agreeTerms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                    </form>
+                    <hr>
+                    <p class="text-center">Already have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reset Your Password</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="forgotEmail" class="form-label">University Email</label>
+                            <input type="email" class="form-control" id="forgotEmail" placeholder="name@university.edu">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Send Reset Link</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Back to login</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     <!-- Chatbot Widget -->
+<div class="chatbot-widget" style="position: fixed; bottom: 80px; right: 20px; z-index: 1000; display: none;">
+    <div class="card" style="width: 320px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
+        <div class="card-header" style="background-color: var(--primary-color, #2c3e50); color: var(--light-color, #ecf0f1); border-radius: 10px 10px 0 0;">
+            <h5 class="mb-0"><i class="fas fa-robot me-2"></i>UniLost & Found Bot</h5>
+        </div>
+        <div class="card-body" style="background-color: var(--light-color, #ecf0f1); max-height: 300px; overflow-y: auto; padding: 15px;">
+            <div id="chatMessages">
+                <p><strong>Bot:</strong> Welcome to UniLost & Found! How can I help you? Try asking about reporting items or locations.</p>
+            </div>
+            <form id="chatForm" style="margin-top: 10px;">
+                <div class="input-group">
+                    <input type="text" id="chatInput" class="form-control" placeholder="Type your message..." style="border-radius: 5px 0 0 5px;">
+                    <button type="submit" class="btn btn-primary" style="border-radius: 0 5px 5px 0;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<button id="chatToggle" class="btn" style="position: fixed; bottom: 20px; right: 20px; background-color: var(--secondary-color, #3498db); color: #fff; border-radius: 50%; width: 50px; height: 50px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);">
+    <i class="fas fa-comment"></i>
+</button>
+
+<!-- CSS for Chatbot -->
+<style>
+.chatbot-widget {
+    transition: all 0.3s ease;
+}
+.chatbot-widget .card-header {
+    background-color: var(--primary-color, #2c3e50);
+    color: var(--light-color, #ecf0f1);
+    border-radius: 10px 10px 0 0;
+    padding: 10px 15px;
+}
+.chatbot-widget .card-body {
+    background-color: var(--light-color, #ecf0f1);
+}
+.chatbot-widget #chatMessages p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+.chatbot-widget #chatMessages strong {
+    color: var(--primary-color, #2c3e50);
+}
+#chatToggle {
+    background-color: var(--secondary-color, #3498db);
+    border: none;
+    transition: background-color 0.3s ease;
+}
+#chatToggle:hover {
+    background-color: #2980b9;
+}
+</style>
+
+<!-- JavaScript for Chatbot (merge with existing script) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Simulated login state (replace with actual authentication logic)
+    let isLoggedIn = false;
+
+    // Chatbot elements
+    const chatWidget = document.querySelector('.chatbot-widget');
+    const chatToggle = document.getElementById('chatToggle');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Toggle chatbot visibility
+    if (chatToggle) {
+        chatToggle.addEventListener('click', function() {
+            chatWidget.style.display = chatWidget.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    // Handle chat form submission
+    if (chatForm) {
+        chatForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const message = chatInput.value.trim().toLowerCase();
+            if (message) {
+                // Add user message
+                chatMessages.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+                // Process response
+                let response = 'Sorry, I didn’t understand that. Try asking about reporting items or FAQs!';
+                if (message.includes('report found item')) {
+                    if (!isLoggedIn) {
+                        response = 'Please sign in to report a found item.';
+                        const alertModal = new bootstrap.Modal(document.getElementById('customAlertModal'));
+                        alertModal.show();
+                    } else {
+                        response = 'Visit the Report Found Item page: <a href="report-found.html">Click here</a>';
+                    }
+                } else if (message.includes('report lost item')) {
+                    response = 'Visit the Report Lost Item page: <a href="report-lost.html">Click here</a>';
+                } else if (message.includes('locations')) {
+                    response = 'Available locations: Main Library, Science Building, Student Center, Sports Complex, Cafeteria.';
+                } else if (message.includes('faq') || message.includes('help')) {
+                    response = 'Ask me about reporting lost/found items or available locations!';
+                }
+                chatMessages.innerHTML += `<p><strong>Bot:</strong> ${response}</p>`;
+                chatInput.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    }
+
+    // Existing report found button logic
+    const reportFoundButton = document.querySelector('a[href="report-found.html"]');
+    if (reportFoundButton) {
+        reportFoundButton.addEventListener('click', function(event) {
+            if (!isLoggedIn) {
+                event.preventDefault();
+                const alertModal = new bootstrap.Modal(document.getElementById('customAlertModal'));
+                alertModal.show();
+            }
+        });
+    }
+
+    // Existing notification badge update
+    console.log('Page loaded');
+    setInterval(function() {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+            const count = parseInt(badge.textContent);
+            if (count < 99) {
+                badge.textContent = count + 1;
+            }
+        }
+    }, 10000);
+});
+</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Simulated login state (replace with actual authentication logic)
+    let isLoggedIn = false; // This would typically come from your authentication system
+
+    // Get the "Report Found Item" button
+    const reportFoundButton = document.querySelector('a[href="report-found.html"]');
+
+    // Add click event listener to the "Report Found Item" button
+    if (reportFoundButton) {
+        reportFoundButton.addEventListener('click', function(event) {
+            if (!isLoggedIn) {
+                // Prevent default navigation
+                event.preventDefault();
+                
+                // Show custom alert modal
+                const alertModal = new bootstrap.Modal(document.getElementById('customAlertModal'));
+                alertModal.show();
+            }
+            // If logged in, allow navigation to report-found.html (default behavior)
+        });
+    }
+
+    // Notification badge update logic
+    console.log('Page loaded');
+    setInterval(function() {
+        const badge = document.querySelector('.notification-badge');
+        if (badge) {
+            const count = parseInt(badge.textContent);
+            if (count < 99) {
+                badge.textContent = count + 1;
+            }
+        }
+    }, 10000);
+});
+
+
+// Example pseudo-code for OpenAI integration
+async function getAIResponse(message) {
+    const response = await fetch('your-backend-api', {
+        method: 'POST',
+        body: JSON.stringify({ prompt: message })
+    });
+    const data = await response.json();
+    return data.reply;
+}
+</script>
+
+</body>
+</html>
