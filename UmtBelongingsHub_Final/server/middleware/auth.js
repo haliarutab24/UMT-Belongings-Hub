@@ -44,4 +44,13 @@ exports.adminMiddleware = async (req, res, next) => {
     console.error('Admin middleware error:', error);
     res.status(500).json({ message: 'Server error' });
   }
+<<<<<<< HEAD
+=======
+  const rateLimit = require('express-rate-limit');
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5 // 5 attempts
+});
+router.post('/login', adminLimiter, adminLogin);
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
 };

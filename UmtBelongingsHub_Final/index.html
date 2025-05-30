@@ -6,8 +6,11 @@
     <title>Umt Belongings Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<<<<<<< HEAD
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+=======
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -77,6 +80,7 @@
                 padding: 2rem 0;
             }
         }
+<<<<<<< HEAD
         /* Custom Alert Modal Styling */
 .custom-alert-modal .modal-content {
     border-radius: 10px;
@@ -125,6 +129,12 @@
 <body>
        <!-- Navigation Bar -->]
 
+=======
+    </style>
+</head>
+<body>
+       <!-- Navigation Bar -->
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">
@@ -139,10 +149,17 @@
                         <a class="nav-link active" href="#">Home</a>
                     </li>
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link" href="lost.html">Lost Items</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="found.html">Found Items</a>
+=======
+                        <a class="nav-link" href="lost-items.html">Lost Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="found-items.html">Found Items</a>
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="about.html">About</a>
@@ -194,6 +211,7 @@
         </div>
     </nav>
 
+<<<<<<< HEAD
 <!-- Custom Alert Model -->
     <div class="modal fade custom-alert-modal" id="customAlertModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -212,6 +230,8 @@
         </div>
     </div>
 </div>
+=======
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
     <!-- Login Type Modal (User/Admin) -->
     <div class="modal fade" id="loginTypeModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -665,6 +685,7 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
      <!-- Chatbot Widget -->
 <div class="chatbot-widget" style="position: fixed; bottom: 80px; right: 20px; z-index: 1000; display: none;">
     <div class="card" style="width: 320px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">
@@ -847,5 +868,231 @@ async function getAIResponse(message) {
 }
 </script>
 
+=======
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Example of handling notifications
+        document.addEventListener('DOMContentLoaded', function() {
+            // This would be replaced with actual notification logic
+            console.log('Page loaded');
+            
+            // Example of real-time notification update
+            setInterval(function() {
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    const count = parseInt(badge.textContent);
+                    if (count < 99) {
+                        badge.textContent = count + 1;
+                    }
+                }
+            }, 10000);
+        });
+    </script>
+ <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hardcoded admin credentials (in real app, this would come from server/database)
+        const ADMIN_CREDENTIALS = {
+            email: "admin@university.edu",
+            password: "admin123" // In real app, never store plain passwords
+        };
+
+        // Check if user is logged in (from localStorage)
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        const isAdmin = localStorage.getItem('isAdmin') === 'true';
+        const username = localStorage.getItem('username') || 'John Doe';
+        const userEmail = localStorage.getItem('userEmail');
+        
+        // Get DOM elements
+        const loggedOutElements = document.querySelectorAll('.logged-out');
+        const loggedInElements = document.querySelectorAll('.logged-in');
+        const usernameElements = document.querySelectorAll('.navbar .username');
+        const loginModal = document.getElementById('loginModal');
+        const signupModal = document.getElementById('signupModal');
+        const adminLoginModal = document.getElementById('adminLoginModal');
+        const logoutBtn = document.getElementById('logoutBtn');
+        
+        // Update UI based on login status
+        function updateUI() {
+            if (isLoggedIn) {
+                loggedOutElements.forEach(el => el.style.display = 'none');
+                loggedInElements.forEach(el => el.style.display = 'block');
+                usernameElements.forEach(el => el.textContent = username);
+                
+                // If admin is logged in, redirect to admin page
+                if (isAdmin) {
+                    window.location.href = 'admin.html';
+                }
+            } else {
+                loggedOutElements.forEach(el => el.style.display = 'block');
+                loggedInElements.forEach(el => el.style.display = 'none');
+            }
+        }
+        
+        // Initialize UI
+        updateUI();
+        
+        // Admin Login form handler
+        if (adminLoginModal) {
+            const adminLoginForm = adminLoginModal.querySelector('form');
+            adminLoginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const email = document.getElementById('adminEmail').value;
+                const password = document.getElementById('adminPassword').value;
+                
+                // Check if credentials match admin credentials
+                if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+                    // Successful admin login
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('isAdmin', 'true');
+                    localStorage.setItem('username', 'Administrator');
+                    
+                    // Close modal and update UI
+                    const modal = bootstrap.Modal.getInstance(adminLoginModal);
+                    modal.hide();
+                    
+                    // Redirect to admin page
+                    window.location.href = 'admin.html';
+                } else {
+                    // Failed login
+                    alert('You are not an administrator. Please sign in as a student.');
+                    
+                    // Close admin modal and open student login modal
+                    const adminModal = bootstrap.Modal.getInstance(adminLoginModal);
+                    adminModal.hide();
+                    
+                    const loginModalInstance = new bootstrap.Modal(document.getElementById('loginModal'));
+                    loginModalInstance.show();
+                }
+            });
+        }
+        
+        // Regular Login form handler
+        if (loginModal) {
+            const loginForm = loginModal.querySelector('form');
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                // Check if account exists in localStorage
+                const existingEmail = localStorage.getItem('userEmail');
+                const existingPassword = localStorage.getItem('userPassword');
+                
+                // Here you would normally validate with server
+                // For demo, we'll check if email exists and password matches
+                if (email.includes('@')) {
+                    if (existingEmail && existingEmail === email) {
+                        // Check if password matches (in real app, you'd hash and compare)
+                        if (existingPassword && existingPassword === password) {
+                            // Successful login
+                            localStorage.setItem('isLoggedIn', 'true');
+                            localStorage.setItem('isAdmin', 'false'); // Ensure not marked as admin
+                            localStorage.setItem('username', localStorage.getItem('userFirstName') + ' ' + localStorage.getItem('userLastName'));
+                            
+                            // Close modal and update UI
+                            const modal = bootstrap.Modal.getInstance(loginModal);
+                            modal.hide();
+                            location.reload(); // Refresh to show updated UI
+                        } else {
+                            alert('Incorrect password!');
+                        }
+                    } else {
+                        // Account doesn't exist
+                        alert('Account not found. Please sign up first.');
+                        // Close login modal and open signup modal
+                        const loginModalInstance = bootstrap.Modal.getInstance(loginModal);
+                        loginModalInstance.hide();
+                        const signupModalInstance = new bootstrap.Modal(document.getElementById('signupModal'));
+                        signupModalInstance.show();
+                        // Pre-fill email in signup form
+                        document.getElementById('signupEmail').value = email;
+                    }
+                } else {
+                    alert('Please enter a valid university email');
+                }
+            });
+        }
+        
+        // Signup form handler
+        if (signupModal) {
+            const signupForm = signupModal.querySelector('form');
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const firstName = document.getElementById('signupFirstName').value;
+                const lastName = document.getElementById('signupLastName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                
+                // Validate
+                if (!firstName || !lastName || !email || !password || !confirmPassword) {
+                    alert('Please fill all fields!');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match!');
+                    return;
+                }
+                
+                if (!email.includes('@')) {
+                    alert('Please enter a valid university email');
+                    return;
+                }
+                
+                // Check if terms are agreed
+                if (!document.getElementById('agreeTerms').checked) {
+                    alert('You must agree to the Terms of Service and Privacy Policy');
+                    return;
+                }
+                
+                // Save user data to localStorage (in real app, this would go to server)
+                localStorage.setItem('userFirstName', firstName);
+                localStorage.setItem('userLastName', lastName);
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userPassword', password); // In real app, NEVER store plain passwords
+                
+                // Successful signup (and auto-login)
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isAdmin', 'false'); // Ensure not marked as admin
+                localStorage.setItem('username', firstName + ' ' + lastName);
+                
+                // Close modal and update UI
+                const modal = bootstrap.Modal.getInstance(signupModal);
+                modal.hide();
+                location.reload(); // Refresh to show updated UI
+            });
+        }
+        
+        // Logout handler
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('isAdmin');
+                localStorage.removeItem('username');
+                location.reload(); // Refresh to show logged out UI
+            });
+        }
+        
+        // Notification counter (example)
+        setInterval(function() {
+            const badge = document.querySelector('.notification-badge');
+            if (badge) {
+                const count = parseInt(badge.textContent);
+                if (count < 99) {
+                    badge.textContent = count + 1;
+                }
+            }
+        }, 10000);
+    });
+</script>
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
 </body>
 </html>

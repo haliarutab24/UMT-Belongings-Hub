@@ -1,4 +1,5 @@
 const express = require('express');
+<<<<<<< HEAD
 const router = express.Router();
 const User = require('../models/user');
 const Post = require('../models/post');
@@ -239,3 +240,10 @@ router.patch('/users/:id', async (req, res, next) => {
 });
 
 module.exports = router;
+=======
+const { adminLogin } = require('../controllers/auth');
+const router = express.Router();
+
+router.post('/login', adminLogin);
+module.exports = router;
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533

@@ -300,6 +300,7 @@
     </div>
   </div>
 
+<<<<<<< HEAD
   <script src="/js/auth.js"></script>
 
  <script>
@@ -579,5 +580,48 @@
     });
   </script>
 
+=======
+ <script>
+  // Admin Dashboard JavaScript
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check admin authentication
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      alert("Admin access required.");
+      window.location.href = 'index.html';
+      return;
+    }
+
+    // Verify token with backend (optional)
+    verifyAdminToken(token).then(() => {
+      // Rest of your existing admin dashboard code
+      if (!Auth.isAdmin()) {
+        alert('Access denied: Admins only!');
+        window.location.href = '/'; // Redirect to home or another page
+        return;
+      }
+
+      // Navigation
+      const navLinks = document.querySelectorAll('.admin-sidebar a');
+      // ... rest of your existing code ...
+    }).catch(() => {
+      localStorage.removeItem('adminToken');
+      window.location.href = 'index.html';
+    });
+
+    async function verifyAdminToken(token) {
+      const response = await fetch('/api/admin/verify', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Invalid token');
+      }
+    }
+
+    // ... rest of your existing functions ...
+  });
+</script>
+>>>>>>> 46c980f62052eb81cf9f88cc20ad812007b6a533
 </body>
 </html>
