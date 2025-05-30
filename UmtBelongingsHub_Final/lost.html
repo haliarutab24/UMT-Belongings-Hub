@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lost Items - UMT Lost & Found</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <!-- Same header as index.html -->
+  </header>
+
+  <main>
+    <h2>Lost Items</h2>
+    
+    <div class="filters">
+      <select id="category-filter">
+        <option value="">All Categories</option>
+        <option value="ID_CARD">ID Cards</option>
+        <option value="ELECTRONICS">Electronics</option>
+        <!-- Other options -->
+      </select>
+      <input type="text" id="search" placeholder="Search items...">
+    </div>
+
+    <div id="lost-items" class="items-grid"></div>
+
+    <button id="load-more">Load More</button>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/posts.js"></script>
+  <script>
+    // Additional functionality for lost items page
+    document.addEventListener('DOMContentLoaded', async () => {
+      let page = 1;
+      const loadMoreBtn = document.getElementById('load-more');
+      
+      const loadItems = async () => {
+        const category = document.getElementById('category-filter').value;
+        const search = document.getElementById('search').value;
+        
+        const response = await fetch(`/api/posts/lost?page=${page}&category=${category}&search=${search}`);
+        const items = await response.json();
+        
+        Posts.renderItems(items, 'lost-items');
+        page++;
+      };
+      
+      loadMoreBtn.addEventListener('click', loadItems);
+      loadItems();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Found Items - UMT Lost & Found</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Additional styles specific to found items page */
+    .report-found-form {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    .image-preview {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .image-preview img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    
+    #toggle-form-btn {
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>UMT Lost & Found Portal</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/lost.html">Lost Items</a>
+      <a href="/found.html">Found Items</a>
+      <div id="auth-buttons">
+        <button id="login-btn">Login</button>
+        <button id="register-btn">Register</button>
+      </div>
+      <div id="user-profile" style="display:none;">
+        <span id="username"></span>
+        <button id="logout-btn">Logout</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Found Items</h2>
+    
+    <button id="toggle-form-btn" class="btn">Report Found Item</button>
+    
+    <div id="report-found-form" class="report-found-form" style="display: none;">
+      <h3>Report Found Item</h3>
+      <form id="found-item-form">
+        <div class="form-group">
+          <label for="item-name">Item Name</label>
+          <input type="text" id="item-name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="item-category">Category</label>
+          <select id="item-category" required>
+            <option value="">Select a category</option>
+            <option value="ID_CARD">ID Card</option>
+            <option value="ELECTRONICS">Electronics</option>
+            <option value="STATIONERY">Stationery</option>
+            <option value="CLOTHING">Clothing</option>
+            <option value="BAGS">Bags</option>
+            <option value="WATER_BOTTLES">Water Bottles</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="found-location">Found Location</label>
+          <input type="text" id="found-location" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="found-date">Found Date</label>
+          <input type="date" id="found-date" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="item-description">Description</label>
+          <textarea id="item-description" rows="4"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="item-images">Upload Images (Max 3)</label>
+          <input type="file" id="item-images" multiple accept="image/*">
+          <div class="image-preview" id="image-preview"></div>
+        </div>
+        
+        <button type="submit" class="btn">Submit Found Item</button>
+      </form>
+    </div>
+    
+    <div class="filters">
+      <select id="category-filter">
+        <option value="">All Categories</option>
+        <option value="ID_CARD">ID Cards</option>
+        <option value="ELECTRONICS">Electronics</option>
+        <option value="STATIONERY">Stationery</option>
+        <option value="CLOTHING">Clothing</option>
+        <option value="BAGS">Bags</option>
+        <option value="WATER_BOTTLES">Water Bottles</option>
+        <option value="OTHER">Other</option>
+      </select>
+      <input type="text" id="search" placeholder="Search found items...">
+    </div>
+
+    <div id="found-items" class="items-grid"></div>
+
+    <button id="load-more" class="btn">Load More</button>
+  </main>
+
+  <script src="/js/auth.js"></script>
+  <script src="/js/posts.js"></script>
+  <script>
+    // Found Items Page Specific JavaScript
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleFormBtn = document.getElementById('toggle-form-btn');
+      const reportForm = document.getElementById('report-found-form');
+      const foundItemForm = document.getElementById('found-item-form');
+      const imageInput = document.getElementById('item-images');
+      const imagePreview = document.getElementById('image-preview');
+      let page = 1;
+      
+      // Toggle form visibility
+      toggleFormBtn.addEventListener('click', () => {
+        const isVisible = reportForm.style.display === 'block';
+        reportForm.style.display = isVisible ? 'none' : 'block';
+        toggleFormBtn.textContent = isVisible ? 'Report Found Item' : 'Cancel';
+      });
+      
+      // Image preview functionality
+      imageInput.addEventListener('change', () => {
+        imagePreview.innerHTML = '';
+        const files = imageInput.files;
+        
+        for (let i = 0; i < Math.min(files.length, 3); i++) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            imagePreview.appendChild(img);
+          };
+          reader.readAsDataURL(files[i]);
+        }
+      });
+      
+      // Form submission
+      foundItemForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const token = Auth.getToken();
+        if (!token) {
+          alert('Please login to report found items');
+          return;
+        }
+        
+        const formData = new FormData();
+        formData.append('title', document.getElementById('item-name').value);
+        formData.append('type', 'FOUND');
+        formData.append('category', document.getElementById('item-category').value);
+        formData.append('location', document.getElementById('found-location').value);
+        formData.append('date', document.getElementById('found-date').value);
+        formData.append('description', document.getElementById('item-description').value);
+        
+        const files = imageInput.files;
+        for (let i = 0; i < Math.min(files.length, 3); i++) {
+          formData.append('images', files[i]);
+        }
+        
+        try {
+          const response = await fetch('/api/posts', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            body: formData
+          });
+          
+          if (response.ok) {
+            alert('Item reported successfully!');
+            foundItemForm.reset();
+            imagePreview.innerHTML = '';
+            reportForm.style.display = 'none';
+            toggleFormBtn.textContent = 'Report Found Item';
+            loadItems(); // Refresh the list
+          } else {
+            throw new Error('Failed to submit');
+          }
+        } catch (err) {
+          console.error('Error submitting form:', err);
+          alert('Failed to report item. Please try again.');
+        }
+      });
+      
+      // Load found items
+      const loadItems = async () => {
+        const category = document.getElementById('category-filter').value;
+        const search = document.getElementById('search').value;
+        
+        try {
+          const response = await fetch(`/api/posts/found?page=${page}&category=${category}&search=${search}`);
+          if (response.ok) {
+            const items = await response.json();
+            renderFoundItems(items);
+          }
+        } catch (err) {
+          console.error('Error loading items:', err);
+        }
+      };
+      
+      // Render found items to the page
+      const renderFoundItems = (items) => {
+        const container = document.getElementById('found-items');
+        
+        items.forEach(item => {
+          const itemCard = document.createElement('div');
+          itemCard.className = 'item-card';
+          itemCard.innerHTML = `
+            <img src="${item.images && item.images[0] ? item.images[0] : '/images/placeholder.jpg'}" alt="${item.title}">
+            <h4>${item.title}</h4>
+            <p><strong>Category:</strong> ${item.category.replace('_', ' ')}</p>
+            <p><strong>Found at:</strong> ${item.location}</p>
+            <p><strong>Date:</strong> ${new Date(item.date).toLocaleDateString()}</p>
+            <p>${item.description ? item.description.substring(0, 50) + '...' : 'No description'}</p>
+            <button class="btn claim-btn" data-id="${item._id}">I Lost This</button>
+          `;
+          container.appendChild(itemCard);
+        });
+        
+        // Add event listeners to claim buttons
+        document.querySelectorAll('.claim-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            if (!Auth.getToken()) {
+              alert('Please login to claim items');
+              return;
+            }
+            claimItem(btn.dataset.id);
+          });
+        });
+      };
+      
+      // Claim item functionality
+      const claimItem = async (itemId) => {
+        try {
+          const response = await fetch(`/api/claims`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${Auth.getToken()}`
+            },
+            body: JSON.stringify({ postId: itemId })
+          });
+          
+          if (response.ok) {
+            alert('Claim request submitted successfully!');
+          } else {
+            throw new Error('Claim failed');
+          }
+        } catch (err) {
+          console.error('Error claiming item:', err);
+          alert('Failed to claim item. Please try again.');
+        }
+      };
+      
+      // Initialize page
+      document.getElementById('load-more').addEventListener('click', () => {
+        page++;
+        loadItems();
+      });
+      
+      document.getElementById('category-filter').addEventListener('change', () => {
+        document.getElementById('found-items').innerHTML = '';
+        page = 1;
+        loadItems();
+      });
+      
+      document.getElementById('search').addEventListener('input', () => {
+        document.getElementById('found-items').innerHTML = '';
+        page = 1;
+        loadItems();
+      });
+      
+      loadItems();
+    });
+  </script>
+</body>
+</html>
